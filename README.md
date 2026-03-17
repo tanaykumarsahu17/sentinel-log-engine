@@ -12,5 +12,5 @@ A high-performance, containerized observability pipeline built from scratch to p
 ## How to Run
 1. Clone this repository.
 2. Run `docker-compose up -d --build`.
-3. Open Grafana at `http://localhost:3000`.
+3. Open Grafana at `http://localhost:3005`.
 4. Drop a log into `logs/app.log` and watch the dashboard light up!
