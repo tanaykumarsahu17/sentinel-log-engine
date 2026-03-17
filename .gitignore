@@ -1,0 +1,36 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+.env
+
+# Java (Maven)
+target/
+*.class
+*.jar
+.mtj.tmp/
+
+# C++
+*.exe
+*.o
+*.out
+log-agent-cpp/agent
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Ignore Logs
+logs/
+
+# Ignore Java build files
+log-processor-java/target/
+
+# Ignore C++ Windows binaries
+log-agent-cpp/*.exe

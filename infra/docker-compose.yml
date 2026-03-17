@@ -1,0 +1,34 @@
+
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  java-processor:
+    build: ./log-processor-java
+    depends_on:
+      - redis
+      - clickhouse
+    environment:
+      - REDIS_HOST=redis
+      - CLICKHOUSE_HOST=clickhouse
+
+  python-api:
+    build: ./analytics-api-py
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - clickhouse

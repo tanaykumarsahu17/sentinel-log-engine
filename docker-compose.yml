@@ -1,0 +1,57 @@
+
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_SKIP_USER_SETUP=1
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  java-processor:
+    build: ./log-processor-java
+    depends_on:
+      - redis
+      - clickhouse
+    environment:
+      - REDIS_HOST=redis
+      - CLICKHOUSE_HOST=clickhouse
+
+  python-api:
+    build: ./analytics-api-py
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - clickhouse
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: sentinel-grafana
+    ports:
+      - "3005:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clickhouse-datasource
+    depends_on:
+      - clickhouse
+  
+  agent:
+    build: ./log-agent-cpp
+    depends_on:
+      - redis
+    volumes:
+      - ./logs:/logs
+
+volumes:
+  clickhouse_data:
